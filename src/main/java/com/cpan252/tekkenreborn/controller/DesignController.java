@@ -2,9 +2,14 @@ package com.cpan252.tekkenreborn.controller;
 
 import java.util.EnumSet;
 
+import com.cpan252.tekkenreborn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +37,8 @@ public class DesignController {
      */
     @Autowired
     private FighterRepository fighterRepository;
+    SecurityContextHolder securityContextHolder;
+
 
     @GetMapping
     public String design() {
@@ -43,6 +50,12 @@ public class DesignController {
         var animes = EnumSet.allOf(Anime.class);
         model.addAttribute("animes", animes);
         log.info("animes converted to string:  {}", animes);
+    }
+    @ModelAttribute
+    public void user(Model model) {
+        var auth = securityContextHolder.getContext().getAuthentication();
+        String currentUserName = auth.getName();
+        model.addAttribute("currentUser", currentUserName);
     }
 
     /**

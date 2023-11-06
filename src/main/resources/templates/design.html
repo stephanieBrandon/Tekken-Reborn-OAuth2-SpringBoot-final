@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -104,13 +106,19 @@
         </select>
         <button class="btn btn-primary mt-5">Create Fighter</button>
       </form>
-      <form method="post" th:action="@{/design/deleteAllFighters}">
-        <button
-          class="btn btn-danger mt-5"
-        >
-          Delete All Fighters
-        </button>
-      </form>
+<!--      <p th:text="${currentUser}"></p>-->
+      <div th:if="${currentUser == 'admin'}">
+        <form method="post" th:action="@{/design/deleteAllFighters}">
+          <button
+
+            class="btn btn-danger mt-5"
+          >
+            Delete All Fighters
+          </button>
+        </form>
+      </div>
+      <div th:unless="${currentUser == 'admin'}">
+      </div>
     </div>
   </body>
 </html>
