@@ -2,5 +2,26 @@ spring:
   datasource:
     url: jdbc:h2:mem:tekkenreborn
     generate-unique-name: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 841360909785-0csl2fd1amp5j2pu4mivj01licaa8a76.apps.googleusercontent.com
+            client-secret: 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
+#            client-authentication-method: basic
+#            authorization-grant-type: authorization_code
+##              redirect-uri: "http://localhost:8081/login/oauth2/code/{registrationId}"
+#            redirect-uri: "http://localhost:8081/login/oauth2/code/"
+#            scope:
+#              -email
+#              -profile
+#        provider:
+#          your-provider-name: # Replace with the same name used for registration
+#            authorization-uri: http://localhost:8081
+#            token-uri:
+#            user-info-uri:
+#            user-name-attribute:
 server:
   port: 8081
+
