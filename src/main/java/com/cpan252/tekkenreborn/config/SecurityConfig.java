@@ -4,8 +4,10 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,8 +23,24 @@ import com.cpan252.tekkenreborn.repository.UserRepository;
  */
 @Configuration
 @EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests()
+//                .antMatchers("/", "/login", "/oauth/**").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin().permitAll()
+//                .and()
+//                .oauth2Login()
+//                .loginPage("/login")
+//                .userInfoEndpoint()
+//                .userService(oauthUserService);
+//    }
 
+//    @Autowired
+//    private CustomOAuth2UserService oauthUserService;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -42,21 +60,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests()
-                .requestMatchers(toH2Console()).permitAll()
-                .requestMatchers("/design", "/fighterlist")
-                .hasRole("USER")
-                .anyRequest().permitAll()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/design", true)
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
-
-                // Make H2-Console non-secured; for debug purposes
-                .and()
+                .authorizeHttpRequests( auth -> {
+                    try {
+                        auth.requestMatchers(toH2Console()).permitAll()
+                                .requestMatchers("/design", "/fighterlist")
+                                .hasRole("USER")
+                                .anyRequest().permitAll()
+                                .and()
+                                .formLogin()
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/design", true)
+                                .and()
+                                .logout()
+                                .logoutSuccessUrl("/");
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .oauth2Login(Customizer.withDefaults())
                 .csrf()
                 .ignoringRequestMatchers(toH2Console())
                 // Allow pages to be loaded in frames from the same origin; needed for

@@ -1,21 +1,20 @@
 package com.cpan252.tekkenreborn.model;
 
+import java.security.Provider;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Builder
@@ -31,6 +30,18 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
+    public Provider getProvider() {
+        return provider;
+    }
+    public void setProvider(){
+        this.provider = provider;
+    }
+    public enum Provider {
+        LOCAL, GOOGLE
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (username.equals("admin"))

@@ -9,12 +9,20 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <script type="text/javascript">
+    $.get("/user", function(data) {
+        $("#user").html(data.name);
+        $(".unauthenticated").hide()
+        $(".authenticated").show()
+    });
+</script>
   </head>
 
   <body>
     <div
       class="d-flex flex-column bd-highlight justify-content-center align-items-center w-75 ms-5"
     >
+      <h4><a th:href="@{/oauth2/authorization/google}">Register with Google</a></h4>
       <h1>Register</h1>
 
       <!-- tag::thAction[] -->
